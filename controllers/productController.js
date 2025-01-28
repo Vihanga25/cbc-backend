@@ -58,3 +58,22 @@ export function editProduct(req,res){
     }
   )
 }
+
+export function getProductByName(res,req){
+  const name = req.body.name;
+
+  Product.find({name : name}) .then(
+    (product)=>{
+      res.json({
+        list : product
+
+      })
+    }
+  ).catch(
+    (err)=>{
+      res.json({
+        message : "Error"
+      })
+    }
+  )
+}
