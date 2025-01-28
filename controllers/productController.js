@@ -1,16 +1,20 @@
-
 import Product from "../models/product.js";
 
-export function getProducts(req,res){
+export function getProduct(req,res){
 
   Product.find().then(
     
     (productList)=>{
-
       res.json({
         list : productList
       })
 
+    }
+  ).catch(
+    (err)=>{
+      res.json({
+        message : "Error "
+      })
     }
   )
 
@@ -37,6 +41,18 @@ export function deleteProduct(req,res){
       res.json(
         {
           message : "Product deleted successfully"
+        }
+      )
+    }
+  )
+}
+
+export function editProduct(req,res){
+  Product.update  ({name: req.body.name}, {price: req.body.price}).then(
+    ()=>{
+      res.json(
+        {
+          message : "Product updated successfully"
         }
       )
     }

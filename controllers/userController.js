@@ -1,5 +1,5 @@
 import User from "../models/user"
-import user from "../models/user"
+
 
 export function getUser(req,res){
 
