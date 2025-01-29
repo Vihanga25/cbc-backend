@@ -60,17 +60,17 @@ export function editProduct(req,res){
 }
 
 export function getProductByName(res,req){
-  const name = req.body.name;
+  const name = req.params.name;
 
   Product.find({name : name}) .then(
-    (product)=>{
+    (productList)=>{
       res.json({
-        list : product
+        list : productList
 
       })
     }
   ).catch(
-    (err)=>{
+    ()=>{
       res.json({
         message : "Error"
       })
