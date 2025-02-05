@@ -36,7 +36,7 @@ export function createProduct(req,res){
 }
 
 export function deleteProduct(req,res){
-  Product.deleteOne({name : req.body.name}).then(
+  Product.deleteOne({name : req.params.name}).then(
     ()=>{
       res.json(
         {

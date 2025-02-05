@@ -5,9 +5,9 @@ import {getProduct, createProduct, deleteProduct, editProduct, getProductByName}
 const productRouter = express.Router();
 
 productRouter.get('/',getProduct);
-productRouter.get("/name" ,getProductByName);
+productRouter.get("/:name" ,getProductByName);
 productRouter.post('/',createProduct);
-productRouter.delete('/',deleteProduct);
+productRouter.delete('/:name',deleteProduct);
 productRouter.put('/',editProduct);
 
 export default productRouter;
