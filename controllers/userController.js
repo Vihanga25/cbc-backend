@@ -23,7 +23,7 @@ export function createUser(req,res){
   newuserData.password = bcrypt.hashSync(newuserData.password, 10)
 
 
-  const user = new User(req.body)
+  const user = new User(newuserData)
   user.save().then(()=>{
     res.json({
       message: "User is created Sucessfully"
@@ -48,4 +48,36 @@ export function deleteUser(req,res){
   )
 }
 
+
+export function loginUser (req,res){
+   
+  User.find({email :req.body.email}
+
+  ).then((users)=>{
+
+   if(users.length == 0) {
+      res.json({
+        message : "User not found"
+      })
+
+   }else{
+    const user = users[0]
+    const isPasswordCorrect = bcrypt.compareSync
+      (req.body.password,user.password)
+
+      if(isPasswordCorrect){
+        res.json({
+          message : "User logged in sucess"
+        })
+      }else{
+        res.json({
+          message : "User not logged & Password is incorrect"
+        })
+      }
+   }
+    
+  }
+ )
+
+}
 
