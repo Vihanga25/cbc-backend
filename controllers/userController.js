@@ -1,5 +1,6 @@
 import User from "../models/user.js"
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 
 export function getUser(req,res){
@@ -66,9 +67,8 @@ export function loginUser (req,res){
       (req.body.password,user.password)
 
       if(isPasswordCorrect){
-        res.json({
-          message : "User logged in sucess"
-        })
+       const token = jwt.sign(user, "cbc-secret-key-9806")
+        console.log(token)
       }else{
         res.json({
           message : "User not logged & Password is incorrect"
