@@ -67,8 +67,20 @@ export function loginUser (req,res){
       (req.body.password,user.password)
 
       if(isPasswordCorrect){
-       const token = jwt.sign(user, "cbc-secret-key-9806")
-        console.log(token)
+       const token = jwt.sign({
+        email : user.email,
+        firstName : user.firstName,
+        lastName : user.lastName,
+        isBlocked : user.isBlocked,
+        type : user.type,
+        profilePicture : user.profilePicture
+       }, "cbc-secret-key-9806")
+
+       res.json({
+          message : "User logged in successfully",
+          token : token
+       })
+        
       }else{
         res.json({
           message : "User not logged & Password is incorrect"
