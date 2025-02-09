@@ -73,7 +73,7 @@ export function loginUser (req,res){
         lastName : user.lastName,
         isBlocked : user.isBlocked,
         type : user.type,
-        profilePicture : user.profilePicture
+        profilePictur : user.profilePictur
        }, "cbc-secret-key-9806")
 
        res.json({

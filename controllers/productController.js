@@ -35,6 +35,7 @@ export function createProduct(req,res){
     res.json({
       message: "You are not an Admin"
     })
+    return
   }
   const product = new Product(req.body)
   product.save().then(()=>{
