@@ -2,7 +2,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import userRouter  from './routes/userRouter.js';
-import productRouter from './routes/productRouter.js';
 import jwt from "jsonwebtoken";
 
 const app = express();
@@ -41,7 +40,7 @@ app.use((req,res,next) =>{
 )
 
 app.use("/api/users",userRouter)
-app.use("/api/products",productRouter)
+
 
 app.listen(
   5000,
