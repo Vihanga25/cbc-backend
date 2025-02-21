@@ -56,3 +56,5 @@ const orderSchema = mongoose.Schema({
     }
 
 })
+
+const Oredr = mongoose.model("orders", orderSchema);
