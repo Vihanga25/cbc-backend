@@ -112,7 +112,7 @@ export function loginUser (req,res){
 
 }
 
-export function isAsmin(req){
+export function isAdmin(req){
   if(req.user == null){
     return false
   }
@@ -138,5 +138,5 @@ export function isCustomer(req){
 
 
 
-//admin = john.doe@example.com - Admin123
+//admin = john.doe@example.com - Admin123 - john.admin@example.com
 // User =  john.newuserdoe@example.com - User123
