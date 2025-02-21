@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 
+
 export function getUser(req,res){
 
   User.find().then(
@@ -117,7 +118,7 @@ export function isAdmin(req){
     return false
   }
 
-  if(req.user.type != "admin"){
+  if(req.user.type != "Admin"){
     return false
   }
 
@@ -129,7 +130,7 @@ export function isCustomer(req){
     return false
   }
 
-  if(req.user.type != "customer"){
+  if(req.user.type != "Customer"){
     return false
   }
 

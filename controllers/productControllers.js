@@ -1,15 +1,16 @@
 import Product from "../models/product.js";
-import {isAdmin} from "./userController.js";
+import { isAdmin } from "./userController.js";
 
 
 export function createProduct (req,res){
 
-     if(!isAdmin(req)){
+ if(!isAdmin(req)){
         res.json({
-            message:"Please loging as administrator to create product"
+            message: "Please log in as an administrator to create a product"
+
         })
         return
-     }
+     }    
 
         const newProductData = req.body
 
