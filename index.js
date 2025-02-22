@@ -11,7 +11,7 @@ dotenv.config()
 
 const app = express();
 
-const mongoUrl = ""
+const mongoUrl = process.env.MONGO_DB_URI
 
 mongoose.connect(mongoUrl,{})
 
