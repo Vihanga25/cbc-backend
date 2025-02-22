@@ -6,7 +6,7 @@ export function createProduct (req,res){
 
  if(!isAdmin(req)){
         res.json({
-            message: "Please log in as an administrator to create a product"
+            message: "Please log in as an administrator to create a product."
 
         })
         return

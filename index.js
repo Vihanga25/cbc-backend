@@ -5,6 +5,7 @@ import userRouter  from './routes/userRouter.js';
 import jwt from "jsonwebtoken";
 import productRouter from './routes/productRouter.js';
 import dotenv from "dotenv";
+import orderRouter from './routes/orderRouter.js';
 
 dotenv.config()
 
@@ -29,9 +30,9 @@ app.use((req,res,next) =>{
   console.log(token)
 
   if (token != null){
-    jwt.verify(token,"cbc-secret-key-9806", (error,decoded)=>{
-      if (!error){
+    jwt.verify(token,process.env.SECRET, (error,decoded)=>{
       
+      if (!error){
         req.user = decoded
       }
     })
@@ -45,6 +46,7 @@ app.use((req,res,next) =>{
 
 app.use("/api/users",userRouter)
 app.use("/api/products",productRouter)
+app.use ("/api/orders",orderRouter)
 
 
 app.listen(
