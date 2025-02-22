@@ -11,7 +11,7 @@ dotenv.config()
 
 const app = express();
 
-const mongoUrl = "mongodb+srv://admin:admin123@cluster0.aiywr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+const mongoUrl = ""
 
 mongoose.connect(mongoUrl,{})
 
