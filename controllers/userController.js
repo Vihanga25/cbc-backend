@@ -3,7 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config()
+
 
 export function getUser(req,res){
 
@@ -31,7 +32,7 @@ export function createUser(req,res){
         message: "Please loging as administrator to create an admin account"
       })
 
-      return
+      return 
     }
 
     if (req.user.type != "admin"){
@@ -122,7 +123,7 @@ export function isAdmin(req){
     return false
   }
 
-  if(req.user.type.toLowerCase() != "Admin"){
+  if(req.user.type.toLowerCase() != "admin"){
     return false
   }
 
@@ -134,7 +135,7 @@ export function isCustomer(req){
     return false
   }
 
-  if(req.user.type != "Customer"){
+  if(req.user.type.toLowerCase() != "Customer"){
     return false
   }
 
@@ -144,4 +145,4 @@ export function isCustomer(req){
 
 
 //admin = john.admintest2@example.com - Admin123
-// User =  john.usertest2@example.com - User123
+// User =  john.newuserdoe@example.com - User123

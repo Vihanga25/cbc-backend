@@ -9,10 +9,10 @@ import orderRouter from './routes/orderRouter.js';
 
 dotenv.config()
 
-
 const app = express();
 
-const mongoUrl = process.env.MONGO_DB_URI
+const mongoUrl = process.env.MONGO_DB_URI;
+
 
 mongoose.connect(mongoUrl,{})
 
@@ -25,25 +25,20 @@ connection.once("open",()=>{
 
 app.use(bodyParser.json())
 
-app.use((req,res,next) =>{
+app.use((req, res, next) => {
+  const token = req.header("Authorization")?.replace("Bearer ", "");
 
-  const token = req.header("Authorization")?.replace("Bearer ","")
-  console.log(token)
-
-  if (token != null){
-    jwt.verify(token,process.env.SECRET, (error,decoded)=>{
-      
-      if (!error){
-        req.user = decoded
-      }
-    })
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET); // Fix: Use JWT_SECRET
+      req.user = decoded;
+    } catch (error) {
+      console.log("Invalid token:", error.message);
+    }
   }
 
-  next ()
-
-}
-
-)
+  next();
+});
 
 app.use("/api/users",userRouter)
 app.use("/api/products",productRouter)

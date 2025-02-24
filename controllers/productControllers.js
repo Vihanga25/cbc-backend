@@ -4,28 +4,34 @@ import { isAdmin } from "./userController.js";
 
 export function createProduct (req,res){
 
+    console.log("User data in request:", req.user);
+
  if(!isAdmin(req)){
         res.json({
             message: "Please log in as an administrator to create a product."
 
         })
-        return;
+        return
      }    
 
         const newProductData = req.body
 
         const product = new Product (newProductData)
 
-        product.save().then(()=>{
+        product
+        .save()
+        .then(()=>{
             res.json({
                 message: "Product created"
-            })
-        }).catch((error)=>{
+            });
+
+        })
+        .catch((error)=>{
             res.json({
                 message: error
-            })
-        })
-}
+            });
+        });
+    }
 
 export function getProducts(req,res){
     Product.find({}).then((products)=>{

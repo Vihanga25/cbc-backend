@@ -1,66 +1,34 @@
 import Order from "../models/order.js";
-import Product from "../models/product.js";
 import { isCustomer } from "./userController.js";
 
 export async function createOrder(req,res) {
     if (!isCustomer(req)) {
-           res.json({
-              
-               message: "Please log in as a customer to add orders"
-           });
-       }
+        res.json({
+           
+            message: "Please log in as a customer to add orders"
+        });
+        return
+    }
 
     try {
-        const latestOrder = await Order.find().sort({ date: -1 }).limit(1)
+        const latestOrder = await Order.find().sort({ date: -1 }).limit(1);
         let orderId
 
         if (latestOrder.length == 0) {
-            orderId = "CBC001"
+            orderId = "CBC001";
         } else {
-            const currentOrderId = latestOrder[0].orderId
+            const currentOrderId = latestOrder[0].orderId;
             const numberString = currentOrderId.replace("CBC", "");
             const number = parseInt(numberString);
             const newNumber = (number + 1).toString().padStart(4, "0");
-            orderId = "CBC" + newNumber
+            orderId = "CBC" + newNumber;
         }
 
-        const newOrderData = req.body
+        const newOrderData = req.body;
+        newOrderData.orderId = orderId;
+        newOrderData.email = req.user.email;
 
-        const newProductArray =[]
-
-        for (let i=0;i<req.body.orderedItems.length;i++){
-            const product = await Product.findOne({
-               productId :  newOrderData.orderedItems[i].productId
-            })
-
-
-            if(product == null){
-                res.json({
-                    message : "Product with Id"+newOrderData.orderedItems[i].productId+ " not found"
-                })
-                return
-            }
-
-            newProductArray[i]={
-                name : product.productName,
-                price : product.price,
-                quantity : newOrderData.orderedItems[i].quantity,
-                image : product.images[0]
-            }
-        }
-
-        console.log (newProductArray)
-
-        newOrderData.orderedItems = newProductArray
-
-
-
-
-
-        newOrderData.orderId = orderId
-        newOrderData.email = req.user.email
-
-        const order = new Order(newOrderData)
+        const order = new Order(newOrderData);
         await order.save();
         res.json({
             message: "Order created"
