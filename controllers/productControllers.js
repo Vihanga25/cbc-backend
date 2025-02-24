@@ -9,7 +9,7 @@ export function createProduct (req,res){
             message: "Please log in as an administrator to create a product."
 
         })
-        return
+        return;
      }    
 
         const newProductData = req.body
