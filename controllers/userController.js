@@ -122,7 +122,7 @@ export function isAdmin(req){
     return false
   }
 
-  if(req.user.type != "Admin"){
+  if(req.user.type.toLowerCase() != "Admin"){
     return false
   }
 
