@@ -103,7 +103,14 @@ export function loginUser (req,res){
 
        res.json({
           message : "User logged in successfully",
-          token : token
+          token : token,
+          user :{
+            firstName : user.firstName,
+            lastName : user.lastName,
+            type : user.type,
+            profilePictur : user.profilePictur,
+            email : user.email
+          }
        })
         
       }else{
