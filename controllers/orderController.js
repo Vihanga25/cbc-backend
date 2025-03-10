@@ -17,7 +17,7 @@ export async function createOrder(req, res) {
         let orderId
 
         if (latestOrder.length == 0) {
-            orderId = "CBC1001"
+            orderId = "CBC000"
         } else {
             const currentOrderId = latestOrder[0].orderId
             const numberString = currentOrderId.replace("CBC", "")
@@ -69,6 +69,8 @@ export async function createOrder(req, res) {
         newOrderData.email = req.user.email
 
         const order = new Order(newOrderData) 
+
+        
 
         res.status(200).json({
             message: "Order created successfully"
