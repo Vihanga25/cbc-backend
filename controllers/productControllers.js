@@ -1,112 +1,71 @@
 import Product from "../models/product.js";
 import { isAdmin } from "./userController.js";
 
-
-export function createProduct (req,res){
-
+export async function createProduct(req, res) {
     console.log("User data in request:", req.user);
 
- if(!isAdmin(req)){
-        res.json({
-            message: "Please log in as an administrator to create a product."
-
-        })
-        return
-     }    
-
-        const newProductData = req.body
-
-        const product = new Product (newProductData)
-
-        product
-        .save()
-        .then(()=>{
-            res.json({
-                message: "Product created"
-            });
-
-        })
-        .catch((error)=>{
-            res.status(403).json({
-                message: error
-            });
-        });
+    if (!isAdmin(req)) {
+        return res.status(403).json({ message: "Please log in as an administrator to create a product." });
     }
 
-export function getProducts(req,res){
-    Product
-    .find({})
-    .then((products)=>{
-        res.json(products)
-    })
+    try {
+        const newProduct = new Product(req.body);
+        await newProduct.save();
+        res.json({ message: "Product created", product: newProduct });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 }
 
-export function deleteProduct(req,res){
-    if(!isAdmin(req)){
-        res.json({
-            message: "Please log in as an administrator to delete a product."
-        })
-        return
+export async function getProducts(req, res) {
+    try {
+        const products = await Product.find({});
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export async function getProductById(req, res) {
+    try {
+        const product = await Product.findById(req.params.productId);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.json(product);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export async function deleteProduct(req, res) {
+    if (!isAdmin(req)) {
+        return res.status(403).json({ message: "Please log in as an administrator to delete a product." });
     }
 
-    const productId = req.params.productId
-
-    Product
-    .deleteOne({
-        productId: productId})
-    .then(
-        ()=>{
-        res.json({
-            message: "Product deleted"
-        })
-    })
-    .catch((error)=>{
-        res.status(403).json({
-            message: error
-        })
-    })
+    try {
+        const deletedProduct = await Product.findByIdAndDelete(req.params.productId);
+        if (!deletedProduct) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.json({ message: "Product deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 }
 
-export function updateProduct (req,res){
-
-    if(!isAdmin(req)){
-        res.status(403).json({
-            message: "Please log in as an administrator to update a product."
-        })
-        return
+export async function updateProduct(req, res) {
+    if (!isAdmin(req)) {
+        return res.status(403).json({ message: "Please log in as an administrator to update a product." });
     }
 
-    const productId = req.params.productId
-    const newProductData = req.body
-
-    Product.updateOne(
-        {productId : productId},
-        newProductData
-    )
-    .then (()=>{
-        res.json({
-            message: "Product Updated"
-        })
-    })
-    .catch((error)=>{
-        res.status(403).json({
-            message: error
-        })
-    })
-
-}
-
-export async function getProductById(req,res){
-
-    try{
-        const productId = req.params.productId
-        const product = await Product.findOne({productId: productId})
-        
-        res.json(product)
-
-    } catch(e){
-        res.status(500).json({
-            e
-        })
+    try {
+        const updatedProduct = await Product.findByIdAndUpdate(req.params.productId, req.body, { new: true });
+        if (!updatedProduct) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.json({ message: "Product updated successfully", product: updatedProduct });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }
