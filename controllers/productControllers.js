@@ -28,7 +28,7 @@ export async function getProducts(req, res) {
 
 export async function getProductById(req, res) {
     try {
-        const product = await Product.findById(req.params.productId);
+        const product = await Product.findOne({ productId: req.params.productId });
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }
@@ -44,10 +44,12 @@ export async function deleteProduct(req, res) {
     }
 
     try {
-        const deletedProduct = await Product.findByIdAndDelete(req.params.productId);
+        const deletedProduct = await Product.findOneAndDelete({ productId: req.params.productId });
+
         if (!deletedProduct) {
             return res.status(404).json({ message: "Product not found" });
         }
+
         res.json({ message: "Product deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -60,7 +62,11 @@ export async function updateProduct(req, res) {
     }
 
     try {
-        const updatedProduct = await Product.findByIdAndUpdate(req.params.productId, req.body, { new: true });
+        const updatedProduct = await Product.findOneAndUpdate(
+            { productId: req.params.productId },
+            req.body,
+            { new: true }
+        );
         if (!updatedProduct) {
             return res.status(404).json({ message: "Product not found" });
         }
