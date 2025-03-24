@@ -82,13 +82,44 @@ export async function createOrder(req, res) {
     }
 }
 
-export async function getOrders(req, res) {
-    try {
-        const orders = await Order.find({ email: req.user.email }) 
-        res.status(200).json(orders)
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+    export async function getOrders(req, res) {
+        try {
+            const orders = await Order.find({ email: req.user.email }) 
+            res.status(200).json(orders)
+        } catch (error) {
+            res.status(500).json({
+                message: error.message
+            })
+        }
     }
-}
+
+    export async function getQuote(req, res) {
+        try {
+        const newOrderData = req.body;
+        const newProductArray = [];
+        let total = 0;
+        let labeledTotal = 0;
+    
+        for (const item of newOrderData.orderedItems) {
+            const product = await Product.findOne({ productId: item.productId });
+            if (!product) {
+            return res.status(404).json({ message: `Product with ID ${item.productId} not found` });
+            }
+    
+            labeledTotal += product.price * item.qty;
+            total += product.lastPrice * item.qty;
+    
+            newProductArray.push({
+            name: product.productName,
+            price: product.lastPrice,
+            labeledPrice: product.price,
+            quantity: item.qty,
+            image: product.images[0],
+            });
+        }
+        return res.json({ orderedItems: newProductArray, total, labeledTotal });
+        } catch (error) {
+        console.error("Error in getQuote:", error);
+        return res.status(500).json({ message: error.message });
+        }
+    }  

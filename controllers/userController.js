@@ -2,6 +2,7 @@ import User from "../models/user.js"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import axios from "axios";
 
 dotenv.config()
 
@@ -147,6 +148,79 @@ export function isCustomer(req){
   }
 
   return true
+}
+
+export async function googleLogin(req,res) {
+
+  const token = req.body.token
+
+  try {
+
+    const response = await axios.get ('https://www.googleapis.com/oauth2/v3/userinfo',{
+      headers:{
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    const email = response.data.email
+    const userList = await User.find({email: email})
+
+    if(userList.length > 0){
+      const user = userList[0]
+      const token = jwt.sign({
+        email : user.email,
+        firstName : user.firstName,
+        lastName : user.lastName,
+        isBlocked : user.isBlocked,
+        type : user.type,
+        profilePictur : user.profilePictur
+       }, 
+       process.env.JWT_SECRET,
+      
+      );
+
+       res.json({
+          message : "User logged in successfully",
+          token : token,
+          user :{
+            firstName : user.firstName,
+            lastName : user.lastName,
+            type : user.type,
+            profilePictur : user.profilePictur,
+            email : user.email
+          }
+       })
+    }else {
+      const newuserData = {
+        email : email,
+        firstName : response.data.given_name,
+        lastName : response.data.family_name,
+        type : "Customer",
+        password : "zzzzz",
+        profilePictur : response.data.picture
+      }
+
+      const user = new User(newuserData)
+      user.save()
+      
+      .then(()=>{
+        res.json({
+          message: "User is created Sucessfully"
+        })
+      })
+      .catch((e)=>{
+        res.json({
+          message: "User not created"
+        })
+      })
+    }
+    
+
+  }catch(e){
+    res.json({
+      message:"Google login failed"
+    })
+  }
 }
 
 
